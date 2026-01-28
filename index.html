@@ -927,7 +927,9 @@
         // Extract order ID from URL path
         function extractOrderIdFromPath() {
             const path = window.location.pathname;
-            const parts = path.split('/').filter(p => p);
+            // Remove /ampdigital/ prefix if present
+            const cleanPath = path.replace('/ampdigital/', '').replace('/ampdigital', '');
+            const parts = cleanPath.split('/').filter(function(p) { return p; });
             
             for (let i = parts.length - 1; i >= 0; i--) {
                 if (!isNaN(parts[i]) && parts[i] !== '') {
@@ -944,11 +946,13 @@
             const debugBox = document.getElementById('debugBox');
             const debugContent = document.getElementById('debugContent');
             
+            const fullUrl = window.location.href;
             const path = window.location.pathname;
             const search = window.location.search;
             const extractedId = extractOrderIdFromPath();
             
-            debugContent.innerHTML = '<div><strong>Full Path:</strong> ' + path + '</div>' +
+            debugContent.innerHTML = '<div><strong>Full URL:</strong> ' + fullUrl + '</div>' +
+                '<div><strong>Path:</strong> ' + path + '</div>' +
                 '<div><strong>Query:</strong> ' + (search || 'none') + '</div>' +
                 '<div><strong>Extracted ID:</strong> ' + (extractedId || 'not found') + '</div>' +
                 '<div><strong>User:</strong> ' + (currentUser ? currentUser.email : 'not logged in') + '</div>';
