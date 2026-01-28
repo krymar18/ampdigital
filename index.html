@@ -16,6 +16,7 @@
             background-color: #ffffff;
             color: #323130;
             padding: 20px;
+            padding-top: 80px;
         }
 
         .container {
@@ -107,7 +108,7 @@
             font-weight: 600;
         }
 
-        /* Modal Overlay */
+        /* Auth Modal Overlay */
         .auth-overlay {
             display: none;
             position: fixed;
@@ -125,7 +126,6 @@
             display: flex;
         }
 
-        /* Auth Modal */
         .auth-modal {
             background: white;
             border-radius: 8px;
@@ -337,6 +337,24 @@
             font-weight: normal;
         }
 
+        /* Update Button */
+        .update-btn {
+            margin-top: 24px;
+            padding: 12px 32px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .update-btn:hover {
+            background: #106ebe;
+        }
+
         /* Files Section */
         .files-section {
             margin-top: 32px;
@@ -458,6 +476,182 @@
             padding: 40px;
         }
 
+        /* Update Status Modal */
+        .update-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .update-modal-overlay.show {
+            display: flex;
+        }
+
+        .update-modal {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            padding: 32px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .update-modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #323130;
+        }
+
+        .update-form-section {
+            margin-bottom: 24px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .update-form-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #323130;
+        }
+
+        .update-form-group {
+            margin-bottom: 16px;
+        }
+
+        .update-form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #323130;
+        }
+
+        .update-form-label .required {
+            color: #d13438;
+        }
+
+        .update-form-select,
+        .update-form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e1e1e1;
+            border-radius: 4px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .update-form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .update-form-select:focus,
+        .update-form-textarea:focus {
+            outline: none;
+            border-color: #0078d4;
+        }
+
+        .update-modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .update-modal-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .update-modal-btn.cancel {
+            background: #f3f2f1;
+            color: #323130;
+        }
+
+        .update-modal-btn.cancel:hover {
+            background: #e1e1e1;
+        }
+
+        .update-modal-btn.submit {
+            background: #0078d4;
+            color: white;
+        }
+
+        .update-modal-btn.submit:hover {
+            background: #106ebe;
+        }
+
+        .update-modal-btn.submit:disabled {
+            background: #c8c6c4;
+            cursor: not-allowed;
+        }
+
+        /* Debug Box - Bottom Right */
+        .debug-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #323130;
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            max-width: 300px;
+        }
+
+        .debug-box-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #00ff00;
+        }
+
+        .debug-box-content {
+            line-height: 1.5;
+        }
+
+        .debug-box-content div {
+            margin-bottom: 4px;
+        }
+
+        .debug-box-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+        }
+
+        .debug-box-close:hover {
+            color: #ff0000;
+        }
+
         .hidden {
             display: none;
         }
@@ -493,9 +687,7 @@
             <span class="user-name" id="currentUserName"></span>
             <span class="user-dropdown-icon">▼</span>
         </div>
-        <div class="user-dropdown-menu" id="userDropdownMenu">
-            <!-- Populated dynamically -->
-        </div>
+        <div class="user-dropdown-menu" id="userDropdownMenu"></div>
     </div>
 
     <!-- Main Content -->
@@ -553,6 +745,8 @@
                     <div class="status-timestamp" id="trafficStatusTime"></div>
                 </div>
             </div>
+
+            <button class="update-btn" onclick="openUpdateForm()">Submit an update</button>
         </div>
 
         <!-- Files Section -->
@@ -569,28 +763,92 @@
         </div>
     </div>
 
+    <!-- Update Status Modal -->
+    <div class="update-modal-overlay" id="updateModalOverlay">
+        <div class="update-modal">
+            <h2 class="update-modal-title">Update Order Status</h2>
+            
+            <div class="update-form-section">
+                <h3>Order Status</h3>
+                <div class="update-form-group">
+                    <label class="update-form-label">
+                        Status
+                    </label>
+                    <select class="update-form-select" id="updateOrderStatus">
+                        <option value="">-- Select Status --</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="update-form-group">
+                    <label class="update-form-label" id="orderCommentLabel">
+                        Comments <span style="color: #605e5c;">(optional)</span>
+                    </label>
+                    <textarea class="update-form-textarea" id="updateOrderComments" placeholder="Enter your comments..."></textarea>
+                </div>
+            </div>
+
+            <div class="update-form-section">
+                <h3>Traffic Status</h3>
+                <div class="update-form-group">
+                    <label class="update-form-label">
+                        Status
+                    </label>
+                    <select class="update-form-select" id="updateTrafficStatus">
+                        <option value="">-- Select Status --</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="update-form-group">
+                    <label class="update-form-label" id="trafficCommentLabel">
+                        Comments <span style="color: #605e5c;">(optional)</span>
+                    </label>
+                    <textarea class="update-form-textarea" id="updateTrafficComments" placeholder="Enter your comments..."></textarea>
+                </div>
+            </div>
+
+            <div class="update-modal-actions">
+                <button class="update-modal-btn cancel" onclick="closeUpdateForm()">Cancel</button>
+                <button class="update-modal-btn submit" id="submitUpdateBtn" onclick="submitUpdate()">Submit Update</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Box - Bottom Right -->
+    <div class="debug-box" id="debugBox" style="display: none;">
+        <button class="debug-box-close" onclick="closeDebugBox()">×</button>
+        <div class="debug-box-title">Debug Info</div>
+        <div class="debug-box-content" id="debugContent"></div>
+    </div>
+
     <script>
-        // Dummy data - will be replaced with Power Automate outputs
+        // User data
         const usersData = [
             {
-                "name": "Kostiantyn Rymar",
+                "name": "Kostia Rymar",
                 "email": "kostiantyn.rymar@ampersand.tv",
                 "initials": "KR"
             },
             {
-                "name": "John Smith",
-                "email": "john.smith@affiliate.com",
-                "initials": "JS"
+                "name": "Kostia Rymar (Guest)",
+                "email": "rymarkostia@gmail.com",
+                "initials": "KR"
             },
             {
-                "name": "Jane Doe",
-                "email": "jane.doe@affiliate.com",
-                "initials": "JD"
+                "name": "Salsa Chebli",
+                "email": "salsabil.c@gmail.com",
+                "initials": "SC"
             },
             {
-                "name": "Bob Wilson",
-                "email": "bob.wilson@affiliate.com",
-                "initials": "BW"
+                "name": "Natasha Levinsohn",
+                "email": "Natasha.Levinsohn@ampersand.tv",
+                "initials": "NL"
+            },
+            {
+                "name": "Maura Riley",
+                "email": "Maura.Riley@ampersand.tv",
+                "initials": "MR"
             }
         ];
 
@@ -664,9 +922,56 @@
 
         let currentTab = 'IO';
         let currentUser = null;
+        let orderId = null;
 
-        // Check if user is already authenticated
+        // Extract order ID from URL path
+        function extractOrderIdFromPath() {
+            const path = window.location.pathname;
+            const parts = path.split('/').filter(p => p);
+            
+            for (let i = parts.length - 1; i >= 0; i--) {
+                if (!isNaN(parts[i]) && parts[i] !== '') {
+                    return parts[i];
+                }
+            }
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Show debug box
+        function showDebugBox() {
+            const debugBox = document.getElementById('debugBox');
+            const debugContent = document.getElementById('debugContent');
+            
+            const path = window.location.pathname;
+            const search = window.location.search;
+            const extractedId = extractOrderIdFromPath();
+            
+            debugContent.innerHTML = '<div><strong>Full Path:</strong> ' + path + '</div>' +
+                '<div><strong>Query:</strong> ' + (search || 'none') + '</div>' +
+                '<div><strong>Extracted ID:</strong> ' + (extractedId || 'not found') + '</div>' +
+                '<div><strong>User:</strong> ' + (currentUser ? currentUser.email : 'not logged in') + '</div>';
+            
+            debugBox.style.display = 'block';
+            
+            setTimeout(function() {
+                debugBox.style.display = 'none';
+            }, 10000);
+        }
+
+        function closeDebugBox() {
+            document.getElementById('debugBox').style.display = 'none';
+        }
+
+        // Check authentication
         function checkAuthentication() {
+            orderId = extractOrderIdFromPath();
+            
+            if (orderId) {
+                showDebugBox();
+            }
+            
             const savedUser = localStorage.getItem('selectedUser');
             
             if (savedUser) {
@@ -681,29 +986,27 @@
             }
         }
 
-        // Show authentication modal
+        // Show auth modal
         function showAuthModal() {
             const authOverlay = document.getElementById('authOverlay');
             const userSelect = document.getElementById('userSelect');
             
-            // Populate user dropdown
-            usersData.forEach(user => {
+            usersData.forEach(function(user) {
                 const option = document.createElement('option');
                 option.value = JSON.stringify(user);
-                option.textContent = `${user.name} (${user.email})`;
+                option.textContent = user.name + ' (' + user.email + ')';
                 userSelect.appendChild(option);
             });
             
             authOverlay.classList.add('show');
         }
 
-        // Enable/disable submit button based on selection
+        // Auth submit handler
         document.getElementById('userSelect').addEventListener('change', function() {
             const submitBtn = document.getElementById('authSubmit');
             submitBtn.disabled = !this.value;
         });
 
-        // Handle authentication submit
         document.getElementById('authSubmit').addEventListener('click', function() {
             const userSelect = document.getElementById('userSelect');
             const rememberMe = document.getElementById('rememberMe').checked;
@@ -711,61 +1014,53 @@
             if (userSelect.value) {
                 currentUser = JSON.parse(userSelect.value);
                 
-                // Save to localStorage if "Remember me" is checked
                 if (rememberMe) {
                     localStorage.setItem('selectedUser', JSON.stringify(currentUser));
                 }
                 
-                // Hide auth modal and show main content
                 document.getElementById('authOverlay').classList.remove('show');
                 showMainContent();
             }
         });
 
-        // Show main content with user context
+        // Show main content
         function showMainContent() {
-            // Update user selector
             document.getElementById('userIcon').textContent = currentUser.initials;
             document.getElementById('currentUserName').textContent = currentUser.name;
             document.getElementById('userSelector').style.display = 'block';
             
-            // Populate user dropdown menu
             populateUserDropdown();
-            
-            // Show main content
             document.getElementById('mainContent').style.display = 'block';
-            
-            // Initialize page with order data
             initializePage();
         }
 
-        // Populate user dropdown for switching
+        // Populate user dropdown
         function populateUserDropdown() {
             const dropdownMenu = document.getElementById('userDropdownMenu');
             dropdownMenu.innerHTML = '';
             
-            usersData.forEach(user => {
+            usersData.forEach(function(user) {
                 const item = document.createElement('div');
                 item.className = 'user-dropdown-item';
                 if (user.email === currentUser.email) {
                     item.classList.add('active');
                 }
-                item.innerHTML = `
-                    <div style="font-weight: 600;">${user.name}</div>
-                    <div style="font-size: 12px; color: #605e5c;">${user.email}</div>
-                `;
-                item.onclick = () => switchUser(user);
+                item.innerHTML = '<div style="font-weight: 600;">' + user.name + '</div>' +
+                    '<div style="font-size: 12px; color: #605e5c;">' + user.email + '</div>';
+                item.onclick = function() {
+                    switchUser(user);
+                };
                 dropdownMenu.appendChild(item);
             });
         }
 
-        // Toggle user dropdown
+        // Toggle dropdown
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
             dropdown.classList.toggle('show');
         }
 
-        // Close dropdown when clicking outside
+        // Close dropdown on outside click
         document.addEventListener('click', function(event) {
             const userSelector = document.getElementById('userSelector');
             const dropdown = document.getElementById('userDropdownMenu');
@@ -778,51 +1073,39 @@
         // Switch user
         function switchUser(user) {
             currentUser = user;
-            
-            // Update localStorage
             localStorage.setItem('selectedUser', JSON.stringify(currentUser));
             
-            // Update UI
             document.getElementById('userIcon').textContent = user.initials;
             document.getElementById('currentUserName').textContent = user.name;
             
-            // Update dropdown active state
             populateUserDropdown();
-            
-            // Close dropdown
             document.getElementById('userDropdownMenu').classList.remove('show');
             
-            // Log user switch (in production, send to Power Automate)
             console.log('User switched to:', user.email);
             logDownloadActivity('User switched', user.email);
         }
 
-        // Initialize page with order data
+        // Initialize page
         function initializePage() {
             populateOrderDetails();
             renderFiles();
         }
 
         function populateOrderDetails() {
-            // Header badges
-            document.getElementById('streamingBadge').textContent = orderData.StreamingvsAddressable?.Value || 'N/A';
-            document.getElementById('billingBadge').textContent = orderData.Billingparty?.Value || 'N/A';
-
-            // Basic details
+            document.getElementById('streamingBadge').textContent = orderData.StreamingvsAddressable ? orderData.StreamingvsAddressable.Value : 'N/A';
+            document.getElementById('billingBadge').textContent = orderData.Billingparty ? orderData.Billingparty.Value : 'N/A';
             document.getElementById('opid').textContent = orderData.OPID || 'N/A';
             document.getElementById('advertiser').textContent = orderData.Title || 'N/A';
             document.getElementById('agency').textContent = orderData.Agency || 'N/A';
-            document.getElementById('vendor').textContent = orderData.MVPDContacts?.Value || 'N/A';
+            document.getElementById('vendor').textContent = orderData.MVPDContacts ? orderData.MVPDContacts.Value : 'N/A';
             
-            // Flight dates
             const flightStart = formatDate(orderData.FlightStart);
             const flightEnd = formatDate(orderData.FlightEnd);
-            document.getElementById('flightDates').textContent = `${flightStart} - ${flightEnd}`;
+            document.getElementById('flightDates').textContent = flightStart + ' - ' + flightEnd;
             
-            document.getElementById('ae').textContent = orderData.AE?.DisplayName || 'N/A';
-            document.getElementById('cm').textContent = orderData.CampaignManager?.DisplayName || 'N/A';
+            document.getElementById('ae').textContent = orderData.AE ? orderData.AE.DisplayName : 'N/A';
+            document.getElementById('cm').textContent = orderData.CampaignManager ? orderData.CampaignManager.DisplayName : 'N/A';
 
-            // AMP Comment
             const ampCommentEl = document.getElementById('ampComment');
             if (orderData.AMPComment) {
                 ampCommentEl.textContent = orderData.AMPComment;
@@ -830,9 +1113,8 @@
                 ampCommentEl.innerHTML = '<span class="comment-empty">No comment</span>';
             }
 
-            // Order Status
             const orderStatusEl = document.getElementById('orderStatus');
-            const orderStatus = orderData.Status?.Value || 'Unknown';
+            const orderStatus = orderData.Status ? orderData.Status.Value : 'Unknown';
             orderStatusEl.textContent = orderStatus;
             orderStatusEl.className = 'status-value ' + getStatusClass(orderStatus);
             
@@ -840,16 +1122,15 @@
             if (orderData.Statuschange) {
                 let timeText = formatDateTime(orderData.Statuschange);
                 if (orderData.StatusUpdatedby) {
-                    timeText += ` by ${orderData.StatusUpdatedby}`;
+                    timeText += ' by ' + orderData.StatusUpdatedby;
                 }
                 orderStatusTime.textContent = timeText;
             } else {
                 orderStatusTime.textContent = 'Never updated';
             }
 
-            // Traffic Status
             const trafficStatusEl = document.getElementById('trafficStatus');
-            const trafficStatus = orderData.TrafficStatus?.Value || 'Unknown';
+            const trafficStatus = orderData.TrafficStatus ? orderData.TrafficStatus.Value : 'Unknown';
             trafficStatusEl.textContent = trafficStatus;
             trafficStatusEl.className = 'status-value ' + getStatusClass(trafficStatus);
             
@@ -857,7 +1138,7 @@
             if (orderData.TrafficStatusChange) {
                 let timeText = formatDateTime(orderData.TrafficStatusChange);
                 if (orderData.TrafficStatusUpdatedby) {
-                    timeText += ` by ${orderData.TrafficStatusUpdatedby}`;
+                    timeText += ' by ' + orderData.TrafficStatusUpdatedby;
                 }
                 trafficStatusTime.textContent = timeText;
             } else {
@@ -866,16 +1147,10 @@
         }
 
         function getStatusClass(status) {
-            switch(status) {
-                case 'Confirmed':
-                    return 'status-confirmed';
-                case 'Pending':
-                    return 'status-pending';
-                case 'Rejected':
-                    return 'status-rejected';
-                default:
-                    return '';
-            }
+            if (status === 'Confirmed') return 'status-confirmed';
+            if (status === 'Pending') return 'status-pending';
+            if (status === 'Rejected') return 'status-rejected';
+            return '';
         }
 
         function formatDate(dateString) {
@@ -900,81 +1175,148 @@
         function switchTab(tabName) {
             currentTab = tabName;
             
-            // Update tab styles
-            document.querySelectorAll('.tab').forEach(tab => {
+            document.querySelectorAll('.tab').forEach(function(tab) {
                 tab.classList.remove('active');
             });
-            document.querySelector(`[data-type="${tabName}"]`).classList.add('active');
+            document.querySelector('[data-type="' + tabName + '"]').classList.add('active');
             
-            // Re-render files
             renderFiles();
         }
 
         function renderFiles() {
             const fileList = document.getElementById('fileList');
             
-            const filteredFiles = filesData.filter(file => 
-                file.file_type?.Value === currentTab
-            );
+            const filteredFiles = filesData.filter(function(file) {
+                return file.file_type && file.file_type.Value === currentTab;
+            });
 
             if (filteredFiles.length === 0) {
                 fileList.innerHTML = '<div class="not-uploaded">No files available for this category</div>';
                 return;
             }
 
-            fileList.innerHTML = filteredFiles.map(file => {
+            fileList.innerHTML = filteredFiles.map(function(file) {
                 const fileName = file['{Name}'] || 'Unnamed File';
-                const fileType = file.file_type?.Value || 'Unknown';
+                const fileType = file.file_type ? file.file_type.Value : 'Unknown';
                 const fileDate = formatFileDate(file.Created);
                 
-                // Construct proper SharePoint download URL
                 const fullPath = file['{FullPath}'] || '';
                 const downloadUrl = fullPath 
-                    ? `https://datadriventv.sharepoint.com/sites/PoliticalStreaming/_layouts/15/download.aspx?SourceUrl=/sites/PoliticalStreaming/${encodeURIComponent(fullPath)}`
+                    ? 'https://datadriventv.sharepoint.com/sites/PoliticalStreaming/_layouts/15/download.aspx?SourceUrl=/sites/PoliticalStreaming/' + encodeURIComponent(fullPath)
                     : '#';
 
-                return `
-                    <div class="file-item">
-                        <div class="file-info">
-                            <div class="file-name">${fileName}</div>
-                            <div class="file-meta">${fileDate} • ${fileType}</div>
-                        </div>
-                        <div class="file-actions">
-                            <a href="${downloadUrl}" target="_blank" class="download-btn" onclick="logDownload('${fileName}')">
-                                <span class="download-icon">↓</span>
-                            </a>
-                        </div>
-                    </div>
-                `;
+                return '<div class="file-item">' +
+                    '<div class="file-info">' +
+                        '<div class="file-name">' + fileName + '</div>' +
+                        '<div class="file-meta">' + fileDate + ' • ' + fileType + '</div>' +
+                    '</div>' +
+                    '<div class="file-actions">' +
+                        '<a href="' + downloadUrl + '" target="_blank" class="download-btn" onclick="logDownload(\'' + fileName + '\')">' +
+                            '<span class="download-icon">↓</span>' +
+                        '</a>' +
+                    '</div>' +
+                '</div>';
             }).join('');
         }
 
-        // Log download activity
         function logDownload(fileName) {
             logDownloadActivity('File download', currentUser.email, fileName);
         }
 
-        function logDownloadActivity(action, userEmail, fileName = null) {
+        function logDownloadActivity(action, userEmail, fileName) {
             const logData = {
                 action: action,
-                user: userEmail || currentUser.email,
+                user: userEmail || (currentUser ? currentUser.email : ''),
                 orderId: orderData.ID,
                 opid: orderData.OPID,
-                file: fileName,
+                file: fileName || null,
                 timestamp: new Date().toISOString()
             };
             
             console.log('Activity logged:', logData);
-            
-            // In production, send to Power Automate
-            // fetch('https://yourflow.com/log-activity', {
-            //     method: 'POST',
-            //     headers: {'Content-Type': 'application/json'},
-            //     body: JSON.stringify(logData)
-            // });
         }
 
-        // Initialize on page load
+        // Update Form Functions
+        function openUpdateForm() {
+            document.getElementById('updateModalOverlay').classList.add('show');
+            updateFormValidation();
+        }
+
+        function closeUpdateForm() {
+            document.getElementById('updateModalOverlay').classList.remove('show');
+            document.getElementById('updateOrderStatus').value = '';
+            document.getElementById('updateOrderComments').value = '';
+            document.getElementById('updateTrafficStatus').value = '';
+            document.getElementById('updateTrafficComments').value = '';
+        }
+
+        function updateFormValidation() {
+            const orderStatus = document.getElementById('updateOrderStatus').value;
+            const trafficStatus = document.getElementById('updateTrafficStatus').value;
+            const orderComments = document.getElementById('updateOrderComments').value.trim();
+            const trafficComments = document.getElementById('updateTrafficComments').value.trim();
+            
+            const orderCommentLabel = document.getElementById('orderCommentLabel');
+            const trafficCommentLabel = document.getElementById('trafficCommentLabel');
+            
+            if (orderStatus === 'Rejected') {
+                orderCommentLabel.innerHTML = 'Comments <span class="required">* (required for rejection)</span>';
+            } else {
+                orderCommentLabel.innerHTML = 'Comments <span style="color: #605e5c;">(optional)</span>';
+            }
+            
+            if (trafficStatus === 'Rejected') {
+                trafficCommentLabel.innerHTML = 'Comments <span class="required">* (required for rejection)</span>';
+            } else {
+                trafficCommentLabel.innerHTML = 'Comments <span style="color: #605e5c;">(optional)</span>';
+            }
+            
+            let isValid = true;
+            
+            if (orderStatus === 'Rejected' && !orderComments) {
+                isValid = false;
+            }
+            
+            if (trafficStatus === 'Rejected' && !trafficComments) {
+                isValid = false;
+            }
+            
+            if (!orderStatus && !trafficStatus) {
+                isValid = false;
+            }
+            
+            document.getElementById('submitUpdateBtn').disabled = !isValid;
+        }
+
+        document.getElementById('updateOrderStatus').addEventListener('change', updateFormValidation);
+        document.getElementById('updateTrafficStatus').addEventListener('change', updateFormValidation);
+        document.getElementById('updateOrderComments').addEventListener('input', updateFormValidation);
+        document.getElementById('updateTrafficComments').addEventListener('input', updateFormValidation);
+
+        function submitUpdate() {
+            const orderStatus = document.getElementById('updateOrderStatus').value;
+            const trafficStatus = document.getElementById('updateTrafficStatus').value;
+            const orderComments = document.getElementById('updateOrderComments').value.trim();
+            const trafficComments = document.getElementById('updateTrafficComments').value.trim();
+            
+            const updateData = {
+                orderId: orderId,
+                userEmail: currentUser.email,
+                userName: currentUser.name,
+                orderStatus: orderStatus || null,
+                orderComments: orderComments || null,
+                trafficStatus: trafficStatus || null,
+                trafficComments: trafficComments || null,
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log('Submitting update:', updateData);
+            
+            alert('Update submitted successfully!\n\nThis is a placeholder. In production, this will send to Power Automate.');
+            closeUpdateForm();
+        }
+
+        // Initialize
         checkAuthentication();
     </script>
 </body>
