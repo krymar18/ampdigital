@@ -864,24 +864,34 @@
         let currentUser = null;
         let orderId = null;
 
-        const API_URL = 'https://default4657d5eea660475fbb1099b5df3efd.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c64389bbba15477eb0b909200beb65b1/triggers/manual/paths/invoke?api-version=2016-10-01';
+        const API_BASE_URL = 'https://default4657d5eea660475fbb1099b5df3efd.46.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/c64389bbba15477eb0b909200beb65b1/triggers/manual/paths/invoke';
 
         // Fetch order data from Power Automate
         async function fetchOrderData(id) {
             try {
-                const response = await fetch(API_URL + '&id=' + id, {
+                // Construct URL exactly as it works in your test
+                const url = API_BASE_URL + '?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=OymdpruJbg2QyqJstyrh8qKTXDltEiQax89t2odSIvc&id=' + id;
+                
+                console.log('Fetching from:', url);
+                
+                const response = await fetch(url, {
                     method: 'GET',
                     headers: {
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     }
                 });
 
+                console.log('Response status:', response.status);
+
                 if (!response.ok) {
+                    console.error('Response not OK:', response.status, response.statusText);
                     showErrorModal();
                     return false;
                 }
 
                 const data = await response.json();
+                console.log('Response data:', data);
 
                 // Validate response structure
                 if (!data.order || !data.files) {
