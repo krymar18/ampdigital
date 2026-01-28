@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Details</title>
+    <title>Order Details 1</title>
     <style>
         * {
             margin: 0;
@@ -752,6 +752,7 @@
             </div>
 
             <button class="update-btn" onclick="openUpdateForm()">Submit an update</button>
+            <button class="update-btn" onclick="emailTeam()" style="margin-left: 12px; background: #f3f2f1; color: #323130; border: 2px solid #0078d4;">📧 Email the Team</button>
         </div>
 
         <!-- Files Section -->
@@ -814,9 +815,6 @@
             </div>
 
             <div class="update-modal-actions">
-                <button class="update-modal-btn email" onclick="emailTeam()" style="margin-right: auto; background: #f3f2f1; color: #323130;">
-                    📧 Email the Team
-                </button>
                 <button class="update-modal-btn cancel" onclick="closeUpdateForm()">Cancel</button>
                 <button class="update-modal-btn submit" id="submitUpdateBtn" onclick="submitUpdate()">Submit Update</button>
             </div>
@@ -1452,24 +1450,20 @@
                 user: currentUser.email
             };
             
-            // Add order section only if changed
+            // Add order section only if changed (always include comment field)
             if (orderChanged) {
                 updateData.io = {
-                    status: orderStatus
+                    status: orderStatus,
+                    comment: orderComments || ''
                 };
-                if (orderComments) {
-                    updateData.io.comment = orderComments;
-                }
             }
             
-            // Add traffic section only if changed
+            // Add traffic section only if changed (always include comment field)
             if (trafficChanged) {
                 updateData.traffic = {
-                    status: trafficStatus
+                    status: trafficStatus,
+                    comment: trafficComments || ''
                 };
-                if (trafficComments) {
-                    updateData.traffic.comment = trafficComments;
-                }
             }
             
             console.log('=== SUBMISSION DATA ===');
