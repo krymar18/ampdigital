@@ -814,6 +814,9 @@
             </div>
 
             <div class="update-modal-actions">
+                <button class="update-modal-btn email" onclick="emailTeam()" style="margin-right: auto; background: #f3f2f1; color: #323130;">
+                    📧 Email the Team
+                </button>
                 <button class="update-modal-btn cancel" onclick="closeUpdateForm()">Cancel</button>
                 <button class="update-modal-btn submit" id="submitUpdateBtn" onclick="submitUpdate()">Submit Update</button>
             </div>
@@ -1272,9 +1275,17 @@
             console.log('Activity logged:', logData);
         }
 
+        // Track original values when form opens
+        let originalOrderStatus = null;
+        let originalTrafficStatus = null;
+
         // Update Form Functions
         function openUpdateForm() {
             document.getElementById('updateModalOverlay').classList.add('show');
+            
+            // Store original values
+            originalOrderStatus = orderData.Status ? orderData.Status.Value : '';
+            originalTrafficStatus = orderData.TrafficStatus ? orderData.TrafficStatus.Value : '';
             
             // Check current statuses
             const currentOrderStatus = orderData.Status ? orderData.Status.Value : '';
@@ -1331,6 +1342,27 @@
             }
             
             updateFormValidation();
+        }
+
+        // Email the team
+        function emailTeam() {
+            const aeEmail = orderData.AE && orderData.AE.DisplayName ? orderData.AE.DisplayName.replace(' ', '.') + '@ampersand.tv' : '';
+            const cmEmail = orderData.CampaignManager && orderData.CampaignManager.DisplayName ? orderData.CampaignManager.DisplayName.replace(' ', '.') + '@ampersand.tv' : '';
+            
+            const toEmails = [aeEmail, cmEmail].filter(function(e) { return e; }).join(',');
+            const ccEmail = 'kostiantyn.rymar@ampersand.tv';
+            
+            const advertiser = orderData.Title || 'Order';
+            const flightStart = formatDate(orderData.FlightStart);
+            const flightEnd = formatDate(orderData.FlightEnd);
+            const opid = orderData.OPID || '';
+            
+            const subject = advertiser + ' (' + flightStart + ' - ' + flightEnd + ') - ' + opid;
+            const body = 'Hi Team,%0D%0A%0D%0AI have a question regarding this order.%0D%0A%0D%0AThank you!';
+            
+            const mailtoLink = 'mailto:' + toEmails + '?cc=' + ccEmail + '&subject=' + encodeURIComponent(subject) + '&body=' + body;
+            
+            window.location.href = mailtoLink;
         }
 
         function closeUpdateForm() {
@@ -1400,20 +1432,51 @@
             const orderComments = document.getElementById('updateOrderComments').value.trim();
             const trafficComments = document.getElementById('updateTrafficComments').value.trim();
             
+            // Determine what changed
+            const orderChanged = orderStatus && orderStatus !== originalOrderStatus;
+            const trafficChanged = trafficStatus && trafficStatus !== originalTrafficStatus;
+            
+            // Determine change type
+            let changeType = null;
+            if (orderChanged && trafficChanged) {
+                changeType = 'both';
+            } else if (orderChanged) {
+                changeType = 'io';
+            } else if (trafficChanged) {
+                changeType = 'traffic';
+            }
+            
+            // Build JSON only with changed sections
             const updateData = {
-                orderId: orderId,
-                userEmail: currentUser.email,
-                userName: currentUser.name,
-                orderStatus: orderStatus || null,
-                orderComments: orderComments || null,
-                trafficStatus: trafficStatus || null,
-                trafficComments: trafficComments || null,
-                timestamp: new Date().toISOString()
+                change_type: changeType,
+                user: currentUser.email
             };
             
-            console.log('Submitting update:', updateData);
+            // Add order section only if changed
+            if (orderChanged) {
+                updateData.io = {
+                    status: orderStatus
+                };
+                if (orderComments) {
+                    updateData.io.comment = orderComments;
+                }
+            }
             
-            alert('Update submitted successfully!\n\nThis is a placeholder. In production, this will send to Power Automate.');
+            // Add traffic section only if changed
+            if (trafficChanged) {
+                updateData.traffic = {
+                    status: trafficStatus
+                };
+                if (trafficComments) {
+                    updateData.traffic.comment = trafficComments;
+                }
+            }
+            
+            console.log('=== SUBMISSION DATA ===');
+            console.log(JSON.stringify(updateData, null, 2));
+            console.log('======================');
+            
+            alert('Update submitted successfully!\n\nCheck the browser console (F12) to see the JSON payload.\n\nIn production, this will be sent to Power Automate.');
             closeUpdateForm();
         }
 
