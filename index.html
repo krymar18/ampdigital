@@ -692,6 +692,11 @@
 
     <!-- Main Content -->
     <div class="container" id="mainContent" style="display: none;">
+        <!-- Content will be loaded here -->
+    </div>
+
+    <!-- Main Content Template (Hidden) -->
+    <template id="mainContentTemplate">
         <div style="position: relative;">
             <div class="header-badges">
                 <div class="badge">New Order</div>
@@ -761,7 +766,7 @@
 
             <div class="file-list" id="fileList"></div>
         </div>
-    </div>
+    </template>
 
     <!-- Update Status Modal -->
     <div class="update-modal-overlay" id="updateModalOverlay">
@@ -852,93 +857,89 @@
             }
         ];
 
-        const orderData = {
-            "ID": 5,
-            "Title": "Ribeye test",
-            "OPID": "115633",
-            "Billingparty": {
-                "Value": "3P"
-            },
-            "FlightStart": "2025-02-10",
-            "FlightEnd": "2025-02-16",
-            "Agency": "Sage Media Planning & Placement",
-            "MVPDContacts": {
-                "Value": "Ribeye"
-            },
-            "AE": {
-                "DisplayName": "Brad Carroll"
-            },
-            "CampaignManager": {
-                "DisplayName": "John Smith"
-            },
-            "AMPComment": "Test order 3",
-            "Status": {
-                "Value": "Pending"
-            },
-            "StatusUpdatedby": "Kostiantyn Rymar",
-            "Statuschange": "2026-01-08T20:05:19Z",
-            "TrafficStatus": {
-                "Value": "Rejected"
-            },
-            "TrafficStatusUpdatedby": "Kostiantyn Rymar",
-            "TrafficStatusChange": "2026-01-08T20:05:19Z",
-            "StreamingvsAddressable": {
-                "Value": "Streaming"
-            }
-        };
-
-        const filesData = [
-            {
-                "ID": 1,
-                "file_type": {
-                    "Value": "IO"
-                },
-                "OPID": 115633,
-                "Created": "2025-12-22T20:44:18Z",
-                "{Name}": "IO_115633_Order_Document",
-                "{FullPath}": "Digital Order Managment system/IO_115633.xlsx"
-            },
-            {
-                "ID": 2,
-                "file_type": {
-                    "Value": "Traffic"
-                },
-                "OPID": 115633,
-                "Created": "2025-12-22T20:45:13Z",
-                "{Name}": "Traffic_115633_Instructions",
-                "{FullPath}": "Digital Order Managment system/Traffic_115633.pdf"
-            },
-            {
-                "ID": 3,
-                "file_type": {
-                    "Value": "Other"
-                },
-                "OPID": 115633,
-                "Created": "2026-01-12T14:10:18Z",
-                "{Name}": "Additional_Documentation",
-                "{FullPath}": "Digital Order Managment system/Additional_115633.docx"
-            }
-        ];
+        let orderData = null;
+        let filesData = null;
 
         let currentTab = 'IO';
         let currentUser = null;
         let orderId = null;
 
+        const API_URL = 'https://default4657d5eea660475fbb1099b5df3efd.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c64389bbba15477eb0b909200beb65b1/triggers/manual/paths/invoke?api-version=2016-10-01';
+
+        // Fetch order data from Power Automate
+        async function fetchOrderData(id) {
+            try {
+                const response = await fetch(API_URL + '&id=' + id, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    showErrorModal();
+                    return false;
+                }
+
+                const data = await response.json();
+
+                // Validate response structure
+                if (!data.order || !data.files) {
+                    console.error('Invalid response structure:', data);
+                    showErrorModal();
+                    return false;
+                }
+
+                orderData = data.order;
+                filesData = data.files;
+                return true;
+
+            } catch (error) {
+                console.error('Error fetching order data:', error);
+                showErrorModal();
+                return false;
+            }
+        }
+
+        // Show error modal
+        function showErrorModal() {
+            const errorHtml = '<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 99999; display: flex; align-items: center; justify-content: center;">' +
+                '<div style="background: white; padding: 40px; border-radius: 8px; max-width: 500px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">' +
+                    '<div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>' +
+                    '<h2 style="color: #d13438; margin-bottom: 16px; font-size: 24px;">Unable to Load Order</h2>' +
+                    '<p style="color: #605e5c; margin-bottom: 24px; font-size: 16px; line-height: 1.5;">We couldn\'t retrieve the order information. This could be due to an invalid order ID or a connection issue.</p>' +
+                    '<p style="color: #323130; font-weight: 600; margin-bottom: 24px; font-size: 14px;">Please reach out to the team via email for assistance.</p>' +
+                    '<a href="mailto:support@ampersand.tv?subject=Order Access Issue&body=I am unable to access order details. Please assist." style="display: inline-block; padding: 12px 32px; background: #0078d4; color: white; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 16px;">Email Support Team</a>' +
+                '</div>' +
+            '</div>';
+
+            document.body.insertAdjacentHTML('beforeend', errorHtml);
+        }
+
         // Extract order ID from URL path
         function extractOrderIdFromPath() {
-            const path = window.location.pathname;
-            // Remove /ampdigital/ prefix if present
-            const cleanPath = path.replace('/ampdigital/', '').replace('/ampdigital', '');
-            const parts = cleanPath.split('/').filter(function(p) { return p; });
+            // First check query parameter (works reliably)
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryId = urlParams.get('id');
+            if (queryId) {
+                return queryId;
+            }
             
+            // Then try path extraction
+            const path = window.location.pathname;
+            // Remove file names like index.html or order_detail_complete.html
+            const cleanPath = path.replace('/ampdigital/', '').replace('/ampdigital', '').replace('.html', '');
+            const parts = cleanPath.split('/').filter(function(p) { return p && p.trim() !== ''; });
+            
+            // Look for numeric ID in path parts
             for (let i = parts.length - 1; i >= 0; i--) {
-                if (!isNaN(parts[i]) && parts[i] !== '') {
-                    return parts[i];
+                const part = parts[i];
+                if (!isNaN(part) && part !== '') {
+                    return part;
                 }
             }
             
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id');
+            return null;
         }
 
         // Show debug box
@@ -972,8 +973,13 @@
         function checkAuthentication() {
             orderId = extractOrderIdFromPath();
             
+            // Show debug box if ID is found
             if (orderId) {
                 showDebugBox();
+            } else {
+                // No order ID provided
+                showErrorModal();
+                return;
             }
             
             const savedUser = localStorage.getItem('selectedUser');
@@ -1028,14 +1034,30 @@
         });
 
         // Show main content
-        function showMainContent() {
+        async function showMainContent() {
             document.getElementById('userIcon').textContent = currentUser.initials;
             document.getElementById('currentUserName').textContent = currentUser.name;
             document.getElementById('userSelector').style.display = 'block';
             
             populateUserDropdown();
-            document.getElementById('mainContent').style.display = 'block';
-            initializePage();
+            
+            // Show loading state
+            const mainContent = document.getElementById('mainContent');
+            mainContent.style.display = 'block';
+            mainContent.innerHTML = '<div style="text-align: center; padding: 100px 20px;">' +
+                '<div style="font-size: 48px; margin-bottom: 20px;">⏳</div>' +
+                '<div style="font-size: 20px; color: #605e5c;">Loading order details...</div>' +
+            '</div>';
+            
+            // Fetch order data
+            const success = await fetchOrderData(orderId);
+            
+            if (success) {
+                // Clone and insert template content
+                const template = document.getElementById('mainContentTemplate');
+                mainContent.innerHTML = template.innerHTML;
+                initializePage();
+            }
         }
 
         // Populate user dropdown
