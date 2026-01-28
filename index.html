@@ -1275,6 +1275,61 @@
         // Update Form Functions
         function openUpdateForm() {
             document.getElementById('updateModalOverlay').classList.add('show');
+            
+            // Check current statuses
+            const currentOrderStatus = orderData.Status ? orderData.Status.Value : '';
+            const currentTrafficStatus = orderData.TrafficStatus ? orderData.TrafficStatus.Value : '';
+            
+            // Get form sections
+            const orderSection = document.querySelector('.update-form-section:nth-of-type(1)');
+            const trafficSection = document.querySelector('.update-form-section:nth-of-type(2)');
+            
+            // Disable/enable Order Status section
+            if (currentOrderStatus === 'Not Uploaded') {
+                orderSection.style.opacity = '0.5';
+                orderSection.style.pointerEvents = 'none';
+                const orderNote = orderSection.querySelector('.status-disabled-note');
+                if (!orderNote) {
+                    const note = document.createElement('div');
+                    note.className = 'status-disabled-note';
+                    note.style.cssText = 'background: #fff4ce; padding: 12px; border-radius: 4px; margin-bottom: 12px; color: #323130; font-size: 14px;';
+                    note.innerHTML = '<strong>⚠️ Note:</strong> Order status is "Not Uploaded" and cannot be updated at this time.';
+                    orderSection.insertBefore(note, orderSection.firstChild.nextSibling);
+                }
+                document.getElementById('updateOrderStatus').disabled = true;
+                document.getElementById('updateOrderComments').disabled = true;
+            } else {
+                orderSection.style.opacity = '1';
+                orderSection.style.pointerEvents = 'auto';
+                const orderNote = orderSection.querySelector('.status-disabled-note');
+                if (orderNote) orderNote.remove();
+                document.getElementById('updateOrderStatus').disabled = false;
+                document.getElementById('updateOrderComments').disabled = false;
+            }
+            
+            // Disable/enable Traffic Status section
+            if (currentTrafficStatus === 'Not Uploaded') {
+                trafficSection.style.opacity = '0.5';
+                trafficSection.style.pointerEvents = 'none';
+                const trafficNote = trafficSection.querySelector('.status-disabled-note');
+                if (!trafficNote) {
+                    const note = document.createElement('div');
+                    note.className = 'status-disabled-note';
+                    note.style.cssText = 'background: #fff4ce; padding: 12px; border-radius: 4px; margin-bottom: 12px; color: #323130; font-size: 14px;';
+                    note.innerHTML = '<strong>⚠️ Note:</strong> Traffic status is "Not Uploaded" and cannot be updated at this time.';
+                    trafficSection.insertBefore(note, trafficSection.firstChild.nextSibling);
+                }
+                document.getElementById('updateTrafficStatus').disabled = true;
+                document.getElementById('updateTrafficComments').disabled = true;
+            } else {
+                trafficSection.style.opacity = '1';
+                trafficSection.style.pointerEvents = 'auto';
+                const trafficNote = trafficSection.querySelector('.status-disabled-note');
+                if (trafficNote) trafficNote.remove();
+                document.getElementById('updateTrafficStatus').disabled = false;
+                document.getElementById('updateTrafficComments').disabled = false;
+            }
+            
             updateFormValidation();
         }
 
@@ -1291,6 +1346,9 @@
             const trafficStatus = document.getElementById('updateTrafficStatus').value;
             const orderComments = document.getElementById('updateOrderComments').value.trim();
             const trafficComments = document.getElementById('updateTrafficComments').value.trim();
+            
+            const orderDisabled = document.getElementById('updateOrderStatus').disabled;
+            const trafficDisabled = document.getElementById('updateTrafficStatus').disabled;
             
             const orderCommentLabel = document.getElementById('orderCommentLabel');
             const trafficCommentLabel = document.getElementById('trafficCommentLabel');
@@ -1309,15 +1367,22 @@
             
             let isValid = true;
             
-            if (orderStatus === 'Rejected' && !orderComments) {
+            if (!orderDisabled && orderStatus === 'Rejected' && !orderComments) {
                 isValid = false;
             }
             
-            if (trafficStatus === 'Rejected' && !trafficComments) {
+            if (!trafficDisabled && trafficStatus === 'Rejected' && !trafficComments) {
                 isValid = false;
             }
             
-            if (!orderStatus && !trafficStatus) {
+            const hasOrderSelection = !orderDisabled && orderStatus;
+            const hasTrafficSelection = !trafficDisabled && trafficStatus;
+            
+            if (!hasOrderSelection && !hasTrafficSelection) {
+                isValid = false;
+            }
+            
+            if (orderDisabled && trafficDisabled) {
                 isValid = false;
             }
             
