@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Details 0.1</title>
+    <title>Order Details 0.2</title>
     <style>
         * {
             margin: 0;
@@ -1471,7 +1471,7 @@
             console.log('======================');
             
             // Send to Power Automate
-            const updateApiUrl = 'https://default4657d5eea660475fbb1099b5df3efd.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ddb6aeaa697448b5a3f466170aebad6f/triggers/manual/paths/invoke?api-version=1';
+            const updateApiUrl = 'https://default4657d5eea660475fbb1099b5df3efd.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ddb6aeaa697448b5a3f466170aebad6f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4HQQMYaekXI0s6exdOb-Ud7vmCNX19Y2K9h8sXjHru4';
             
             // Disable submit button during submission
             const submitBtn = document.getElementById('submitUpdateBtn');
