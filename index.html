@@ -1497,9 +1497,20 @@
                 return response.json();
             })
             .then(function(data) {
-                console.log('Success response:', data);
-                alert('Update submitted successfully!\n\nYour changes have been recorded.');
-                closeUpdateForm();
+    console.log('Success response:', data);
+    
+    // Update the global orderData with the response
+    if (data.order) {
+        orderData = data.order;
+        
+        // Re-render the page with updated data
+        populateOrderDetails();
+        
+        console.log('Order data updated from server');
+    }
+    
+    alert('Update submitted successfully!\n\nYour changes have been recorded.');
+    closeUpdateForm();
                 
                 // Optionally reload order data to show updated values
                 // fetchOrderData(orderId).then(function() { initializePage(); });
