@@ -1447,7 +1447,8 @@
             // Build JSON only with changed sections
             const updateData = {
                 change_type: changeType,
-                user: currentUser.email
+                user: currentUser.email,
+                id: queryId
             };
             
             // Add order section only if changed (always include comment field)
