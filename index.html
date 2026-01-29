@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Details 1</title>
+    <title>Order Details 0.1</title>
     <style>
         * {
             margin: 0;
@@ -1470,8 +1470,47 @@
             console.log(JSON.stringify(updateData, null, 2));
             console.log('======================');
             
-            alert('Update submitted successfully!\n\nCheck the browser console (F12) to see the JSON payload.\n\nIn production, this will be sent to Power Automate.');
-            closeUpdateForm();
+            // Send to Power Automate
+            const updateApiUrl = 'https://default4657d5eea660475fbb1099b5df3efd.46.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ddb6aeaa697448b5a3f466170aebad6f/triggers/manual/paths/invoke?api-version=1';
+            
+            // Disable submit button during submission
+            const submitBtn = document.getElementById('submitUpdateBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            fetch(updateApiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+            .then(function(response) {
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error('Submission failed: ' + response.status);
+                }
+                
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('Success response:', data);
+                alert('Update submitted successfully!\n\nYour changes have been recorded.');
+                closeUpdateForm();
+                
+                // Optionally reload order data to show updated values
+                // fetchOrderData(orderId).then(function() { initializePage(); });
+            })
+            .catch(function(error) {
+                console.error('Submission error:', error);
+                alert('Failed to submit update.\n\nPlease try again or contact support if the issue persists.');
+                
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Update';
+            });
         }
 
         // Initialize
