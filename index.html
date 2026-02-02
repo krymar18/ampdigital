@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Details 2</title>
+    <title>Order Details 3</title>
     <style>
         * {
             margin: 0;
@@ -991,7 +991,9 @@
     <div class="file-list" id="fileList"></div>
 </div>
 
-    <!-- Update Status Modal -->
+   
+    </div>
+ <!-- Update Status Modal -->
     <div class="update-modal-overlay" id="updateModalOverlay">
         <div class="update-modal">
             <h2 class="update-modal-title">Update Order Status</h2>
@@ -1037,8 +1039,6 @@
                 <button class="update-modal-btn submit" id="submitUpdateBtn" onclick="submitUpdate()">Change Status</button>
             </div>
         </div>
-    </div>
-
     <script>
         // User data
         const usersData = [
@@ -1355,53 +1355,6 @@
                             </label>
                         </div>
                         <div class="file-list" id="fileList"></div>
-                    </div>
-                                       <!-- Update Status Modal -->
-                    <div class="update-modal-overlay" id="updateModalOverlay">
-                        <div class="update-modal">
-                            <h2 class="update-modal-title">Update Order Status</h2>
-                            
-                            <div class="update-form-section">
-                                <h3>Order Status</h3>
-                                <div class="update-form-group">
-                                    <label class="update-form-label">Status</label>
-                                    <select class="update-form-select" id="updateOrderStatus">
-                                        <option value="">-- Select Status --</option>
-                                        <option value="Confirmed">Confirmed</option>
-                                        <option value="Rejected">Rejected</option>
-                                    </select>
-                                </div>
-                                <div class="update-form-group">
-                                    <label class="update-form-label" id="orderCommentLabel">
-                                        Comments <span style="color: #605e5c;">(optional)</span>
-                                    </label>
-                                    <textarea class="update-form-textarea" id="updateOrderComments" placeholder="Enter your comments..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="update-form-section">
-                                <h3>Traffic Status</h3>
-                                <div class="update-form-group">
-                                    <label class="update-form-label">Status</label>
-                                    <select class="update-form-select" id="updateTrafficStatus">
-                                        <option value="">-- Select Status --</option>
-                                        <option value="Confirmed">Confirmed</option>
-                                        <option value="Rejected">Rejected</option>
-                                    </select>
-                                </div>
-                                <div class="update-form-group">
-                                    <label class="update-form-label" id="trafficCommentLabel">
-                                        Comments <span style="color: #605e5c;">(optional)</span>
-                                    </label>
-                                    <textarea class="update-form-textarea" id="updateTrafficComments" placeholder="Enter your comments..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="update-modal-actions">
-                                <button class="update-modal-btn cancel" onclick="closeUpdateForm()">Cancel</button>
-                                <button class="update-modal-btn submit" id="submitUpdateBtn" onclick="submitUpdate()">Change Status</button>
-                            </div>
-                        </div>
                     </div>
                 `;
                 
