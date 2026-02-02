@@ -1753,28 +1753,32 @@
             const orderSection = document.querySelector('.update-form-section:nth-of-type(1)');
             const trafficSection = document.querySelector('.update-form-section:nth-of-type(2)');
             
-            if (originalOrderStatus === 'Not Uploaded') {
-                orderSection.style.opacity = '0.5';
-                orderSection.style.pointerEvents = 'none';
-                document.getElementById('updateOrderStatus').disabled = true;
-                document.getElementById('updateOrderComments').disabled = true;
-            } else {
-                orderSection.style.opacity = '1';
-                orderSection.style.pointerEvents = 'auto';
-                document.getElementById('updateOrderStatus').disabled = false;
-                document.getElementById('updateOrderComments').disabled = false;
+            if (orderSection) {
+                if (originalOrderStatus === 'Not Uploaded') {
+                    orderSection.style.opacity = '0.5';
+                    orderSection.style.pointerEvents = 'none';
+                    document.getElementById('updateOrderStatus').disabled = true;
+                    document.getElementById('updateOrderComments').disabled = true;
+                } else {
+                    orderSection.style.opacity = '1';
+                    orderSection.style.pointerEvents = 'auto';
+                    document.getElementById('updateOrderStatus').disabled = false;
+                    document.getElementById('updateOrderComments').disabled = false;
+                }
             }
             
-            if (originalTrafficStatus === 'Not Uploaded') {
-                trafficSection.style.opacity = '0.5';
-                trafficSection.style.pointerEvents = 'none';
-                document.getElementById('updateTrafficStatus').disabled = true;
-                document.getElementById('updateTrafficComments').disabled = true;
-            } else {
-                trafficSection.style.opacity = '1';
-                trafficSection.style.pointerEvents = 'auto';
-                document.getElementById('updateTrafficStatus').disabled = false;
-                document.getElementById('updateTrafficComments').disabled = false;
+            if (trafficSection) {
+                if (originalTrafficStatus === 'Not Uploaded') {
+                    trafficSection.style.opacity = '0.5';
+                    trafficSection.style.pointerEvents = 'none';
+                    document.getElementById('updateTrafficStatus').disabled = true;
+                    document.getElementById('updateTrafficComments').disabled = true;
+                } else {
+                    trafficSection.style.opacity = '1';
+                    trafficSection.style.pointerEvents = 'auto';
+                    document.getElementById('updateTrafficStatus').disabled = false;
+                    document.getElementById('updateTrafficComments').disabled = false;
+                }
             }
             
             updateFormValidation();
