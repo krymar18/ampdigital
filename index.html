@@ -818,6 +818,68 @@
         .hidden {
             display: none;
         }
+        /* Version Warning Modal */
+.version-warning-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 10002;
+    align-items: center;
+    justify-content: center;
+}
+
+.version-warning-overlay.show {
+    display: flex;
+}
+
+.version-warning-modal {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    padding: 40px;
+    text-align: center;
+}
+
+.version-warning-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.version-warning-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #d13438;
+}
+
+.version-warning-text {
+    font-size: 16px;
+    color: #605e5c;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.version-warning-btn {
+    padding: 12px 32px;
+    background: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.version-warning-btn:hover {
+    background: #106ebe;
+}
     </style>
 </head>
 <body>
@@ -842,6 +904,15 @@
             <button class="auth-submit-btn" id="authSubmit" disabled>Continue</button>
         </div>
     </div>
+    <!-- Version Warning Modal -->
+<div class="version-warning-overlay" id="versionWarningOverlay">
+    <div class="version-warning-modal">
+        <div class="version-warning-icon">⚠️</div>
+        <h2 class="version-warning-title">Outdated Link Version</h2>
+        <p class="version-warning-text" id="versionWarningText"></p>
+        <button class="version-warning-btn" onclick="closeVersionWarning()">OK</button>
+    </div>
+</div>
 
     <!-- User Selector in Top Right -->
     <div class="user-selector" id="userSelector" style="display: none;">
@@ -1104,7 +1175,32 @@
                 return false;
             }
         }
+// Extract version from URL
+function extractVersionFromPath() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('version');
+}
 
+// Check version mismatch
+function checkVersionMismatch(urlVersion, dataVersion) {
+    const warningText = document.getElementById('versionWarningText');
+    
+    if (!urlVersion) {
+        warningText.textContent = 'No version number was included in the link. Please reference files on this page for the most up-to-date information.';
+        document.getElementById('versionWarningOverlay').classList.add('show');
+        return;
+    }
+    
+    if (urlVersion !== dataVersion) {
+        warningText.textContent = 'You\'re using a link from an older version. To ensure you\'re viewing the correct files, please reference the latest email or download the latest files from this page.';
+        document.getElementById('versionWarningOverlay').classList.add('show');
+    }
+}
+
+// Close version warning
+function closeVersionWarning() {
+    document.getElementById('versionWarningOverlay').classList.remove('show');
+}
         // Show error modal
         function showErrorModal() {
             const errorHtml = '<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 99999; display: flex; align-items: center; justify-content: center;">' +
@@ -1220,6 +1316,12 @@
             const success = await fetchOrderData(orderId);
             
             if (success) {
+                    // Check version mismatch
+    const urlVersion = extractVersionFromPath();
+    const dataVersion = orderData.version || orderData.Version;
+    checkVersionMismatch(urlVersion, dataVersion)
+
+                
                 // Restore the full page structure
                 mainContent.innerHTML = `
                     <!-- Header -->
