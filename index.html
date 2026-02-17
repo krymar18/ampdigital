@@ -1178,7 +1178,7 @@
 // Extract version from URL
 function extractVersionFromPath() {
     const urlParams = new URLSearchParams(window.location.search);
-    return int(urlParams.get('version'));
+    return parseInt(urlParams.get('version'));
 }
 
 // Check version mismatch
@@ -1191,7 +1191,7 @@ function checkVersionMismatch(urlVersion, dataVersion) {
         return;
     }
     
-    if (urlVersion !== int(dataVersion)) {
+    if (urlVersion !== parseInt(dataVersion)) {
         warningText.textContent = 'You\'re using a link from an older version. To ensure you\'re viewing the correct files, please reference the latest email or download the latest files from this page.';
         document.getElementById('versionWarningOverlay').classList.add('show');
     }
