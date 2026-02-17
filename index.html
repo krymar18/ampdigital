@@ -1178,7 +1178,7 @@
 // Extract version from URL
 function extractVersionFromPath() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('version');
+    return int(urlParams.get('version'));
 }
 
 // Check version mismatch
