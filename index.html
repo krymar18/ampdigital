@@ -1191,7 +1191,7 @@ function checkVersionMismatch(urlVersion, dataVersion) {
         return;
     }
     
-    if (urlVersion !== dataVersion) {
+    if (urlVersion !== int(dataVersion)) {
         warningText.textContent = 'You\'re using a link from an older version. To ensure you\'re viewing the correct files, please reference the latest email or download the latest files from this page.';
         document.getElementById('versionWarningOverlay').classList.add('show');
     }
